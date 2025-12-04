@@ -6,7 +6,7 @@ export default function App() {
     <Router>
       <Routes>
 
-        {/* HOME PAGE */}
+        
         <Route
           path="/"
           element={
@@ -17,7 +17,6 @@ export default function App() {
           }
         />
 
-        {/* FILEUPLOAD PAGE */}
         <Route path="/upload" element={<FileUpload />} />
 
       </Routes>

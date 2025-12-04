@@ -40,7 +40,6 @@ export default function FileUpload() {
         Select images or PDFs. Click a file to open it fullscreen.
       </p>
 
-      {/* Upload box */}
       <div style={{ marginTop: "20px" }}>
         <label
           style={{
@@ -68,7 +67,6 @@ export default function FileUpload() {
         />
       </div>
 
-      {/* Uploaded file previews */}
       {files.length > 0 && (
         <div style={{ marginTop: "30px" }}>
           <h2 style={{ marginBottom: "15px" }}>Uploaded Files</h2>
@@ -92,7 +90,6 @@ export default function FileUpload() {
                   color: "white",
                 }}
               >
-                {/* Image preview */}
                 {file.type === "image" && (
                   <img
                     src={file.url}
@@ -107,7 +104,6 @@ export default function FileUpload() {
                   />
                 )}
 
-                {/* Clean PDF preview */}
                 {file.type === "pdf" && (
                   <div
                     style={{
@@ -145,7 +141,6 @@ export default function FileUpload() {
             ))}
           </div>
 
-          {/* Clear button */}
           <button
             style={{
               marginTop: "25px",
@@ -164,7 +159,6 @@ export default function FileUpload() {
         </div>
       )}
 
-      {/* Fullscreen viewer for PDF or image */}
       {fullscreen && (
         <div
           onClick={() => setFullscreen(null)}
