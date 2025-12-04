@@ -1,0 +1,46 @@
+/* ------------ NAVBAR ------------- */
+
+.navbar {
+  width: 100%;
+  background-color: #1E40AF;
+  padding: 18px 0;
+  display: flex;
+  justify-content: center; /* centers container */
+  position: sticky;
+  top: 0;
+}
+
+.nav-inner {
+  width: 90%;
+  max-width: 1200px; /* keeps layout centered */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 26px;
+  font-weight: bold;
+  color: white;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #E2E8F0;
+  font-size: 16px;
+}
+
+.signup-btn {
+  background: white;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #1E3A8A;
+  text-decoration: none;
+}
