@@ -1,26 +1,18 @@
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import FileUpload from "./FileUpload";
+import Navbar from "./components/Navbar";
+import Home from "./pages/Home";
+import Poll from "./pages/Poll";   // ⬅ add this
+import { Route, Routes } from "react-router-dom";
 
 export default function App() {
   return (
-    <Router>
+    <>
+      <Navbar />
       <Routes>
-
-        {/* HOME PAGE */}
-        <Route
-          path="/"
-          element={
-            <div style={{ padding: "20px" }}>
-              <h1>Home Page</h1>
-              <Link to="/upload">Go to FileUpload Page</Link>
-            </div>
-          }
-        />
-
-        {/* FILEUPLOAD PAGE */}
-        <Route path="/upload" element={<FileUpload />} />
-
+        <Route path="/" element={<Home />} />
+        <Route path="/poll" element={<Poll />} />   {/* ⬅ new */}
+        <Route path="/login" element={<h1>Login Page</h1>} />
+        <Route path="/signup" element={<h1>Signup Page</h1>} />
       </Routes>
-    </Router>
+    </>
   );
 }
