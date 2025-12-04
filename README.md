@@ -13,7 +13,7 @@ A collaborative travel app where groups can plan trips together, upload essentia
 - Real-time collaboration for all group members  
 - Suggestions for places to visit (future scope or optional module)
 
-### Document Management
+### Document Management 
 - Upload tickets, hotel vouchers, IDs, and other files  
 - Easy access for the entire group
 
