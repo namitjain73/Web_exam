@@ -10,7 +10,6 @@ const userSchema = new mongoose.Schema(
     },
 
     email: {
-        
       type: String,
       required: true,
       unique: true,
@@ -40,6 +39,7 @@ const userSchema = new mongoose.Schema(
 
 // Password hash before save
 userSchema.pre("save", async function (next) {
+  // This hook is triggered by user.save() in the controller
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();

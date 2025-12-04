@@ -9,24 +9,41 @@ export const register = async (req, res) => {
     if (!name || !email || !password)
       return res.status(400).json({ message: "Missing required fields" });
 
+    // 1. Check if user already exists
     const exists = await User.findOne({ email });
     if (exists)
-      return res.status(400).json({ message: "Email already registered" });
+      // Use 409 Conflict for resource conflict (already exists)
+      return res.status(409).json({ message: "Email already registered" });
 
-    const user = await User.create({
+    // 2. Create new user instance
+    const user = new User({
       name,
       email,
-      password,
+      password, // Plain password is set here
       dob,
       gender
     });
 
-    return res.json({
+    // 3. Use .save() to trigger the pre('save') hook in User.js 
+    // where the password will be hashed automatically.
+    await user.save(); 
+
+    // Use 201 Created for successful resource creation
+    return res.status(201).json({ 
       message: "Registration successful",
       userId: user._id
     });
   } catch (err) {
-    return res.status(500).json({ message: "Error", error: err.message });
+    // Log the full error for server-side debugging
+    console.error("Server-Side Registration Error:", err); 
+    
+    // Check for Mongoose Validation Error (e.g., failed minlength)
+    if (err.name === 'ValidationError') {
+        return res.status(400).json({ message: "Validation failed: Check input data." });
+    }
+
+    // Default 500 for unhandled issues
+    return res.status(500).json({ message: "Internal Server Error", error: err.message });
   }
 };
 
@@ -41,6 +58,7 @@ export const login = async (req, res) => {
     if (!user)
       return res.status(404).json({ message: "User not found" });
 
+    // The password comparison will work because the stored password is now hashed (after the fix)
     const match = await bcrypt.compare(password, user.password);
     if (!match)
       return res.status(401).json({ message: "Invalid password" });

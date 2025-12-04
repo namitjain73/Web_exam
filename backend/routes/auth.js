@@ -20,6 +20,7 @@ router.post("/login", login);
 router.post("/refresh-token", refreshAccessToken);
 
 // CURRENT USER
-// router.get("/me", requireAuth, me);
+import { requireAuth } from "../middlewares/requireAuth.js";
+router.get("/me", requireAuth, me);
 
 export default router;

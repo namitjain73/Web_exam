@@ -1,0 +1,167 @@
+.expenses-tab {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.expenses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.expenses-header h2 {
+  color: #333;
+}
+
+.total-expenses {
+  color: #667eea;
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 5px;
+}
+
+.debt-summary {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.debt-summary h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.no-debts {
+  color: #28a745;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.transaction {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+}
+
+.transaction-from {
+  font-weight: 600;
+  color: #c33;
+}
+
+.transaction-arrow {
+  color: #666;
+}
+
+.transaction-to {
+  font-weight: 600;
+  color: #28a745;
+}
+
+.transaction-amount {
+  margin-left: auto;
+  font-weight: 600;
+  color: #333;
+  font-size: 18px;
+}
+
+.user-balance {
+  padding-top: 20px;
+  border-top: 2px solid #e0e0e0;
+}
+
+.user-balance h4 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.user-balance p {
+  font-size: 18px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.expenses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.expense-card {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.expense-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.expense-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.expense-header h4 {
+  color: #333;
+  font-size: 18px;
+}
+
+.expense-amount {
+  font-size: 20px;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.expense-details {
+  color: #666;
+  font-size: 14px;
+}
+
+.expense-details p {
+  margin-bottom: 5px;
+}
+
+.expense-details strong {
+  color: #333;
+}
+
+.expense-date {
+  color: #999;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.split-input {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.split-input label {
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+.split-input input {
+  width: 150px;
+}
+

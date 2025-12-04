@@ -1,0 +1,131 @@
+.votes-tab {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.votes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.votes-header h2 {
+  color: #333;
+}
+
+.votes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.vote-card {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.vote-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.vote-header h3 {
+  color: #333;
+}
+
+.vote-count {
+  background: #667eea;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vote-options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.vote-option {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.2s;
+}
+
+.vote-option.user-vote {
+  border-color: #667eea;
+  background: #f0f4ff;
+}
+
+.vote-option-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.option-text {
+  font-weight: 500;
+  color: #333;
+}
+
+.check-icon {
+  color: #667eea;
+  font-size: 20px;
+}
+
+.vote-bar-container {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.vote-bar {
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.3s;
+}
+
+.vote-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.vote-btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.vote-btn:hover {
+  background: #5568d3;
+}
+
+.vote-expiry {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+  color: #999;
+  font-size: 12px;
+}
+

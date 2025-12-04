@@ -1,0 +1,114 @@
+.itinerary-tab {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.itinerary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.itinerary-header h2 {
+  color: #333;
+}
+
+.day-section {
+  margin-bottom: 40px;
+}
+
+.day-header {
+  color: #667eea;
+  font-size: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.activity-card {
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.activity-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.activity-card.dragging {
+  opacity: 0.5;
+}
+
+.drag-handle {
+  cursor: grab;
+  color: #999;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.activity-header h4 {
+  color: #333;
+  font-size: 18px;
+}
+
+.activity-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.activity-description {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.activity-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: #666;
+}
+
+.activity-time,
+.activity-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.badge-suggested {
+  display: inline-block;
+  background: #fff3cd;
+  color: #856404;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
