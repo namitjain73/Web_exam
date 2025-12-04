@@ -6,10 +6,10 @@ export default function Navbar() {
       <div className="nav-inner">
         <h2 className="logo">PlanMyTrip</h2>
 
-        <div className="nav-menu">
+        <nav className="nav-menu">
           <Link className="nav-link" to="/login">Login</Link>
           <Link className="signup-btn" to="/signup">Sign Up</Link>
-        </div>
+        </nav>
       </div>
     </header>
   );
