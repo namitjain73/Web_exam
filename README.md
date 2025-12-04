@@ -31,10 +31,11 @@ A collaborative travel app where groups can plan trips together, upload essentia
 - Pure CSS (no Tailwind — kept simple to avoid merge conflicts)
 
 *Team Contributions:*  
-- *Kavya:* Landing page  
-- *Akshansh:* File upload component  
+- *Kavya:* Landing page  and poll component
+- *Akshansh:* File upload component  and readme documentation
 - *Arju:* Authentication groundwork  
-- *Namit:* Project integration + resolving major merge conflicts  
+- *Namit:* Project integration + resolving major merge conflicts
+- *Himansh*  Collaborated with Arju and Namit 
 
 ## Project Setup
 
@@ -47,5 +48,13 @@ A collaborative travel app where groups can plan trips together, upload essentia
 <img width="1912" height="909" alt="Screenshot 2025-12-04 123058" src="https://github.com/user-attachments/assets/53e52e51-2f1c-4b5b-ad8c-38af4e2c8d45" />
 
 <img width="1920" height="1080" alt="Screenshot 2025-12-04 124549" src="https://github.com/user-attachments/assets/711bea0b-2bfb-4f52-a2e1-ce8b04e449cb" />
+
+## Folder Structure
+
+<img width="419" height="559" alt="Screenshot 2025-12-04 130137" src="https://github.com/user-attachments/assets/1e9b40d1-1244-437a-8d7c-a9c96a5b76cf" />
+
+<img width="406" height="499" alt="Screenshot 2025-12-04 130149" src="https://github.com/user-attachments/assets/62c8db70-69a6-43af-92e6-b373993cbb96" />
+
+
 
 
