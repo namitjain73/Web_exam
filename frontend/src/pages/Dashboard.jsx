@@ -7,9 +7,20 @@ const Dashboard = () => {
   const [teamImage, setTeamImage] = useState("");
   const [teamId, setTeamId] = useState("");
   const [teams, setTeams] = useState([]);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
     loadTeams();
+    // decode token to get current user id (if token present)
+    try {
+      const token = localStorage.getItem("token");
+      if (token) {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        setCurrentUserId(payload.id || payload._id || null);
+      }
+    } catch (e) {
+      // ignore
+    }
   }, []);
 
   const loadTeams = async () => {
@@ -42,6 +53,26 @@ const Dashboard = () => {
     }
   };
 
+  const acceptRequest = async (teamId, userId) => {
+    try {
+      await api.post(`/team/accept/${teamId}/${userId}`);
+      alert("Request accepted");
+      loadTeams();
+    } catch (err) {
+      alert("Error accepting request");
+    }
+  };
+
+  const rejectRequest = async (teamId, userId) => {
+    try {
+      await api.post(`/team/reject/${teamId}/${userId}`);
+      alert("Request rejected");
+      loadTeams();
+    } catch (err) {
+      alert("Error rejecting request");
+    }
+  };
+
   return (
     <div className="p-8">
 
@@ -50,6 +81,7 @@ const Dashboard = () => {
         <button onClick={() => setTab("create")}>Create Team</button>
         <button onClick={() => setTab("join")}>Join Team</button>
         <button onClick={() => setTab("all")}>All Teams</button>
+        <button onClick={() => setTab("requests")}>Requests</button>
       </div>
 
       {/* CREATE TEAM */}
@@ -114,8 +146,63 @@ const Dashboard = () => {
                 <p className="text-sm text-gray-600 mt-1 break-all">
                   Team ID: {t._id}
                 </p>
+                {/* show pending count if any */}
+                {t.pendingRequests && t.pendingRequests.length > 0 && (
+                  <p className="text-sm text-red-600 mt-2">
+                    Pending Requests: {t.pendingRequests.length}
+                  </p>
+                )}
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* REQUESTS (only for team owners) */}
+      {tab === "requests" && (
+        <div>
+          <h2 className="text-2xl mb-3">Pending Join Requests</h2>
+
+          <div className="space-y-4">
+            {teams
+              .filter((t) => t.pendingRequests && t.pendingRequests.length > 0)
+              .map((t) => (
+                <div key={t._id} className="p-4 shadow rounded bg-white">
+                  <h3 className="text-lg font-bold">{t.teamName}</h3>
+                  <p className="text-sm text-gray-600">Team ID: {t._id}</p>
+
+                  {/* Only owner can accept/reject */}
+                  {String(t.owner?._id || t.owner) === String(currentUserId) ? (
+                    <div className="mt-3 space-y-2">
+                      {t.pendingRequests.map((u) => (
+                        <div key={u._id} className="flex items-center justify-between border p-2 rounded">
+                          <div>
+                            <div className="font-medium">{u.name || u.email}</div>
+                            <div className="text-xs text-gray-500">{u.email}</div>
+                          </div>
+
+                          <div className="flex gap-2">
+                            <button
+                              className="bg-green-600 text-white px-3 py-1 rounded"
+                              onClick={() => acceptRequest(t._id, u._id)}
+                            >
+                              Accept
+                            </button>
+                            <button
+                              className="bg-red-600 text-white px-3 py-1 rounded"
+                              onClick={() => rejectRequest(t._id, u._id)}
+                            >
+                              Reject
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="mt-2 text-sm text-gray-600">You are not the owner of this team.</p>
+                  )}
+                </div>
+              ))}
           </div>
         </div>
       )}
