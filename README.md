@@ -1,16 +1,43 @@
-# React + Vite
+# Travel Planner with Itinerary + Expense Splitter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
+Group trips are fun, but the planning is usually a mess—random WhatsApp chats, buried email confirmations, and the classic headache of splitting expenses.  
+This project solves all of that in one place.
 
-Currently, two official plugins are available:
+A collaborative travel app where groups can plan trips together, upload essential documents, track shared expenses, and settle dues with minimal transactions.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## React Compiler
+### Itinerary Planning
+- Add, edit, and manage events in a shared timeline  
+- Real-time collaboration for all group members  
+- Suggestions for places to visit (future scope or optional module)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Document Management
+- Upload tickets, hotel vouchers, IDs, and other files  
+- Easy access for the entire group
 
-## Expanding the ESLint configuration
+### Expense Splitting
+- Add shared expenses (e.g., dinner, cab, activities)  
+- Select the participants for each expense  
+- Automatic balance calculation  
+- “Who owes who” is computed with minimal transactions  
+- Settle payments and update the ledger instantly  
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Tech Stack
+*Frontend:*  
+- React (Vite setup)  
+- Pure CSS (no Tailwind — kept simple to avoid merge conflicts)
+
+*Team Contributions:*  
+- *Kavya:* Landing page  
+- *Akshansh:* File upload component  
+- *Arju:* Authentication groundwork  
+- *Namit:* Project integration + resolving major merge conflicts  
+
+## Project Setup
+
+1. Clone the repo  
+2. npm install
+
+## Screenshots
