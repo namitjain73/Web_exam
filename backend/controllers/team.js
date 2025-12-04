@@ -1,5 +1,6 @@
 import Team from "../models/Team.js";
 import User from "../models/User.js";
+import mongoose from "mongoose";
 
 // -----------------------------
 // CREATE TEAM
@@ -128,6 +129,129 @@ export const getMyTeams = async (req, res) => {
 
 
         return res.json({ teams });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+
+// -----------------------------
+// GET TEAM DETAILS
+// -----------------------------
+export const getTeamDetails = async (req, res) => {
+    try {
+        const { teamId } = req.params;
+        if (!mongoose.Types.ObjectId.isValid(teamId))
+            return res.status(400).json({ message: "Invalid team id" });
+
+        const team = await Team.findById(teamId)
+            .populate("owner", "name email")
+            .populate("members", "name email")
+            .populate("pendingRequests", "name email")
+            .populate("documents.uploadedBy", "name email")
+            .populate("polls.createdBy", "name email")
+            .populate("activityLogs.by", "name email");
+
+        if (!team) return res.status(404).json({ message: "Team not found" });
+
+        return res.json({ team });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+
+// -----------------------------
+// ADD DOCUMENT (simple URL-based)
+// -----------------------------
+export const addDocument = async (req, res) => {
+    try {
+        const { teamId } = req.params;
+        const { url, name } = req.body;
+
+        if (!url) return res.status(400).json({ message: "Document URL required" });
+
+        const team = await Team.findById(teamId);
+        if (!team) return res.status(404).json({ message: "Team not found" });
+
+        // Only members can upload
+        if (!team.members.map(String).includes(String(req.user)))
+            return res.status(403).json({ message: "Only team members can upload documents" });
+
+        team.documents.push({ name: name || "Document", url, uploadedBy: req.user });
+        team.activityLogs.push({ message: `Document added: ${name || url}`, by: req.user });
+
+        await team.save();
+
+        return res.json({ message: "Document added" });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+
+// -----------------------------
+// CREATE POLL
+// -----------------------------
+export const createPoll = async (req, res) => {
+    try {
+        const { teamId } = req.params;
+        const { question, options } = req.body; // options = [string]
+
+        if (!question || !options || !Array.isArray(options) || options.length < 2)
+            return res.status(400).json({ message: "Question and at least two options required" });
+
+        const team = await Team.findById(teamId);
+        if (!team) return res.status(404).json({ message: "Team not found" });
+
+        team.polls.push({
+            question,
+            options: options.map((o) => ({ text: o, votes: [] })),
+            createdBy: req.user
+        });
+
+        team.activityLogs.push({ message: `Poll created: ${question}`, by: req.user });
+
+        await team.save();
+
+        return res.json({ message: "Poll created" });
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+};
+
+
+// -----------------------------
+// VOTE POLL
+// -----------------------------
+export const votePoll = async (req, res) => {
+    try {
+        const { teamId, pollId } = req.params;
+        const { optionIndex } = req.body; // integer
+
+        const team = await Team.findById(teamId);
+        if (!team) return res.status(404).json({ message: "Team not found" });
+
+        const poll = team.polls.id(pollId);
+        if (!poll) return res.status(404).json({ message: "Poll not found" });
+
+        // remove user from all option votes
+        poll.options.forEach((opt) => {
+            opt.votes = opt.votes.filter((u) => String(u) !== String(req.user));
+        });
+
+        // add user to chosen option
+        if (poll.options[optionIndex]) {
+            poll.options[optionIndex].votes.push(req.user);
+        } else {
+            return res.status(400).json({ message: "Invalid option" });
+        }
+
+        team.activityLogs.push({ message: `Voted on poll: ${poll.question}`, by: req.user });
+
+        await team.save();
+
+        return res.json({ message: "Voted" });
     } catch (err) {
         return res.status(500).json({ message: err.message });
     }

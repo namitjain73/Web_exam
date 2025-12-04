@@ -8,6 +8,11 @@ const Dashboard = () => {
   const [teamId, setTeamId] = useState("");
   const [teams, setTeams] = useState([]);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [docUrl, setDocUrl] = useState("");
+  const [docName, setDocName] = useState("");
+  const [pollQuestion, setPollQuestion] = useState("");
+  const [pollOptionsText, setPollOptionsText] = useState("");
 
   useEffect(() => {
     loadTeams();
@@ -30,6 +35,15 @@ const Dashboard = () => {
       setTeams(res.data.teams);
     } catch (err) {
       console.log("Error loading teams");
+    }
+  };
+
+  const loadTeamDetails = async (teamId) => {
+    try {
+      const res = await api.get(`/team/${teamId}`);
+      setSelectedTeam(res.data.team);
+    } catch (err) {
+      alert("Error loading team details");
     }
   };
 
@@ -70,6 +84,39 @@ const Dashboard = () => {
       loadTeams();
     } catch (err) {
       alert("Error rejecting request");
+    }
+  };
+
+  const addDocumentToTeam = async (teamId) => {
+    try {
+      await api.post(`/team/${teamId}/document`, { url: docUrl, name: docName });
+      setDocUrl("");
+      setDocName("");
+      await loadTeamDetails(teamId);
+      loadTeams();
+    } catch (err) {
+      alert("Error adding document");
+    }
+  };
+
+  const createPollForTeam = async (teamId) => {
+    try {
+      const options = pollOptionsText.split(";").map((s) => s.trim()).filter(Boolean);
+      await api.post(`/team/${teamId}/poll`, { question: pollQuestion, options });
+      setPollQuestion("");
+      setPollOptionsText("");
+      await loadTeamDetails(teamId);
+    } catch (err) {
+      alert("Error creating poll");
+    }
+  };
+
+  const votePollOption = async (teamId, pollId, optionIndex) => {
+    try {
+      await api.post(`/team/${teamId}/poll/${pollId}/vote`, { optionIndex });
+      await loadTeamDetails(teamId);
+    } catch (err) {
+      alert("Error voting");
     }
   };
 
@@ -152,6 +199,9 @@ const Dashboard = () => {
                     Pending Requests: {t.pendingRequests.length}
                   </p>
                 )}
+                <div className="mt-3 flex gap-2">
+                  <button className="bg-gray-200 px-2 py-1 rounded" onClick={() => loadTeamDetails(t._id)}>View Details</button>
+                </div>
               </div>
             ))}
           </div>
@@ -203,6 +253,104 @@ const Dashboard = () => {
                   )}
                 </div>
               ))}
+          </div>
+        </div>
+      )}
+
+      {/* TEAM DETAILS */}
+      {selectedTeam && (
+        <div className="mt-6">
+          <h2 className="text-2xl mb-3">{selectedTeam.teamName} — Details</h2>
+          <div className="grid grid-cols-3 gap-6">
+            <div className="p-4 bg-white shadow rounded">
+              <h3 className="font-bold">Destination</h3>
+              <p className="text-sm mt-1">{selectedTeam.destination || "(not set)"}</p>
+
+              <h3 className="font-bold mt-4">Members</h3>
+              <ul className="mt-2 space-y-1">
+                {selectedTeam.members.map((m) => (
+                  <li key={m._id} className="text-sm">{m.name} — {m.email}</li>
+                ))}
+              </ul>
+
+              <h3 className="font-bold mt-4">Pending Requests</h3>
+              <ul className="mt-2 space-y-1">
+                {selectedTeam.pendingRequests.map((r) => (
+                  <li key={r._id} className="text-sm">{r.name} — {r.email}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="p-4 bg-white shadow rounded">
+              <h3 className="font-bold">Documents</h3>
+              <ul className="mt-2 space-y-2">
+                {selectedTeam.documents && selectedTeam.documents.length > 0 ? (
+                  selectedTeam.documents.map((d, i) => (
+                    <li key={i} className="text-sm">
+                      <a className="text-blue-600" href={d.url} target="_blank" rel="noreferrer">{d.name || d.url}</a>
+                      <div className="text-xs text-gray-500">Uploaded by: {d.uploadedBy?.name || d.uploadedBy?.email}</div>
+                    </li>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500">No documents</div>
+                )}
+              </ul>
+
+              <div className="mt-4">
+                <h4 className="font-medium">Add Document (URL)</h4>
+                <input className="w-full border p-2 mt-2" placeholder="Document name" value={docName} onChange={(e)=>setDocName(e.target.value)} />
+                <input className="w-full border p-2 mt-2" placeholder="Document URL" value={docUrl} onChange={(e)=>setDocUrl(e.target.value)} />
+                <button className="mt-2 bg-blue-600 text-white px-3 py-1 rounded" onClick={() => addDocumentToTeam(selectedTeam._id)}>Add Document</button>
+              </div>
+            </div>
+
+            <div className="p-4 bg-white shadow rounded">
+              <h3 className="font-bold">Polls</h3>
+              <div className="space-y-3 mt-2">
+                {selectedTeam.polls && selectedTeam.polls.length > 0 ? (
+                  selectedTeam.polls.map((p) => (
+                    <div key={p._id} className="p-2 border rounded">
+                      <div className="font-medium">{p.question}</div>
+                      <div className="text-xs text-gray-500">By: {p.createdBy?.name || p.createdBy?.email}</div>
+                      <div className="mt-2 space-y-1">
+                        {p.options.map((opt, idx) => (
+                          <div key={idx} className="flex items-center justify-between">
+                            <div className="text-sm">{opt.text}</div>
+                            <div className="flex items-center gap-2">
+                              <div className="text-xs text-gray-600">{opt.votes?.length || 0}</div>
+                              <button className="bg-green-600 text-white px-2 py-1 rounded text-xs" onClick={() => votePollOption(selectedTeam._id, p._id, idx)}>Vote</button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500">No polls</div>
+                )}
+
+                <div className="mt-4">
+                  <h4 className="font-medium">Create Poll</h4>
+                  <input className="w-full border p-2 mt-2" placeholder="Question" value={pollQuestion} onChange={(e)=>setPollQuestion(e.target.value)} />
+                  <input className="w-full border p-2 mt-2" placeholder="Options (separate with ; )" value={pollOptionsText} onChange={(e)=>setPollOptionsText(e.target.value)} />
+                  <button className="mt-2 bg-blue-600 text-white px-3 py-1 rounded" onClick={() => createPollForTeam(selectedTeam._id)}>Create Poll</button>
+                </div>
+              </div>
+
+              <h3 className="font-bold mt-4">Activity Logs</h3>
+              <ul className="mt-2 space-y-1 text-sm text-gray-600">
+                {selectedTeam.activityLogs && selectedTeam.activityLogs.length > 0 ? (
+                  selectedTeam.activityLogs.map((l, i) => (
+                    <li key={i}>{l.message} — {l.by?.name || l.by?.email} <span className="text-xs text-gray-400">({new Date(l.at).toLocaleString()})</span></li>
+                  ))
+                ) : (
+                  <div className="text-sm text-gray-500">No recent activity</div>
+                )}
+              </ul>
+            </div>
+          </div>
+          <div className="mt-4">
+            <button className="bg-gray-300 px-3 py-1 rounded" onClick={() => setSelectedTeam(null)}>Close Details</button>
           </div>
         </div>
       )}
