@@ -1,84 +1,133 @@
-// src/pages/Poll.jsx
 import { useState } from "react";
 
-const DESTINATIONS = ["Goa", "Manali", "Jaipur", "Kerala"];
-
 export default function Poll() {
-  const [selected, setSelected] = useState(null);          // current user choice
-  const [votes, setVotes] = useState(Array(DESTINATIONS.length).fill(0)); // total votes
+  const [options, setOptions] = useState([]);
+  const [votes, setVotes] = useState([]);
+  const [selected, setSelected] = useState([]); // MULTIPLE SELECT
+  const [newOption, setNewOption] = useState("");
   const [result, setResult] = useState("");
 
-  const handleVote = () => {
-    if (selected === null) {
-      alert("Please select a destination before submitting your vote.");
-      return;
+  const toggleSelect = (index) => {
+    if (selected.includes(index)) {
+      setSelected(selected.filter((i) => i !== index));
+    } else {
+      setSelected([...selected, index]);
     }
-
-    setVotes(prev => {
-      const updated = [...prev];
-      updated[selected] += 1;
-      return updated;
-    });
-
-    // clear selection for next user (same laptop demo)
-    setSelected(null);
-    setResult(""); // reset result until we calculate again
   };
 
-  const calculateResult = () => {
-    const maxVote = Math.max(...votes);
-    if (maxVote === 0) {
-      setResult("No votes yet.");
-      return;
-    }
+  const handleVote = () => {
+    if (selected.length === 0) return alert("Please select at least one option.");
 
-    // if tie, indexOf gives first destination with max votes
-    const winnerIndex = votes.indexOf(maxVote);
-    const winnerName = DESTINATIONS[winnerIndex];
+    const updatedVotes = [...votes];
+    selected.forEach(i => updatedVotes[i]++);
+    setVotes(updatedVotes);
+    setSelected([]); 
+  };
 
-    setResult(`Next trip destination: ${winnerName} ✈️`);
+  const showResult = () => {
+    const maxVotes = Math.max(...votes);
+    const winners = options.filter((opt, i) => votes[i] === maxVotes);
+
+    setResult(
+      winners.length > 1
+        ? `Tie — selecting first: ${winners[0]}`
+        : `Winner: 🎉 ${winners[0]}`
+    );
+  };
+
+  const addOption = () => {
+    if (!newOption.trim()) return alert("Destination cannot be empty!");
+
+    setOptions([...options, newOption]);
+    setVotes([...votes, 0]);
+    setNewOption("");
   };
 
   return (
-    <div className="poll-container">
-      <div className="poll-card">
-        <h2>Vote for your next trip destination</h2>
-        <p>Select one option and submit your vote.</p>
+    <div style={styles.card}>
+      <h2 style={styles.heading}>Vote for your next trip destination</h2>
 
-        <div className="poll-options">
-          {DESTINATIONS.map((dest, index) => (
-            <label key={dest} className="poll-option">
+      <div style={styles.addSection}>
+        <input
+          type="text"
+          placeholder="Enter new destination name"
+          value={newOption}
+          onChange={(e) => setNewOption(e.target.value)}
+          style={styles.input}
+        />
+        <button style={styles.addBtn} onClick={addOption}>Add</button>
+      </div>
+
+      {options.length > 0 ? (
+        <>
+          <p style={styles.subtext}>Select multiple destinations and submit your vote.</p>
+
+          {options.map((option, index) => (
+            <label key={index} style={styles.option}>
               <input
-                type="radio"
-                name="destination"
-                value={index}
-                checked={selected === index}
-                onChange={() => setSelected(index)}
+                type="checkbox"
+                checked={selected.includes(index)}
+                onChange={() => toggleSelect(index)}
               />
-              <span>{dest}</span>
+              {option}
             </label>
           ))}
-        </div>
 
-        <div className="poll-buttons">
-          <button className="primary-btn" onClick={handleVote}>
-            Submit Vote
-          </button>
-          <button className="secondary-btn" onClick={calculateResult}>
-            Show Result
-          </button>
-        </div>
+          <div style={styles.btnGroup}>
+            <button style={styles.voteBtn} onClick={handleVote}>Submit Vote</button>
+            <button style={styles.resultBtn} onClick={showResult}>Show Result</button>
+          </div>
+        </>
+      ) : (
+        <p style={{ marginTop: 20, color: "gray" }}>Add destinations to begin voting.</p>
+      )}
 
-        <div className="poll-stats">
-          {DESTINATIONS.map((dest, i) => (
-            <p key={dest}>
-              {dest}: {votes[i]} vote(s)
-            </p>
-          ))}
-        </div>
-
-        {result && <div className="result-box">{result}</div>}
+      <div style={styles.results}>
+        {options.map((opt, i) => (
+          <p key={i}>{opt}: {votes[i]} vote(s)</p>
+        ))}
       </div>
+
+      {result && <h3 style={styles.resultText}>{result}</h3>}
     </div>
   );
 }
+
+const styles = {
+  card: {
+    background: "#fff",
+    width: "60%",
+    margin: "auto",
+    marginTop: "50px",
+    padding: "30px",
+    borderRadius: "10px",
+    boxShadow: "0 5px 15px rgba(0,0,0,0.1)"
+  },
+  heading: { fontSize: "26px", fontWeight: "bold" },
+  subtext: { marginTop: "10px", fontSize: "16px" },
+  option: { display: "block", marginTop: "12px", fontSize: "18px" },
+  btnGroup: { display: "flex", gap: "15px", marginTop: "20px" },
+  voteBtn: {
+    background: "#2563eb", color: "#fff",
+    padding: "10px 20px",
+    borderRadius: "6px", border: "none", cursor: "pointer"
+  },
+  resultBtn: {
+    background: "#ddd", padding: "10px 20px", borderRadius: "6px", cursor: "pointer"
+  },
+  addSection: { display: "flex", gap: "10px", marginTop: "10px" },
+  input: {
+    flex: 1, padding: "10px",
+    borderRadius: "6px", border: "1px solid #ccc"
+  },
+  addBtn: {
+    background: "#2563eb",
+    padding: "10px 20px",
+    color: "#fff",
+    borderRadius: "6px",
+    border: "none",
+    cursor: "pointer"
+  },
+  results: { marginTop: "20px", fontSize: "16px" },
+  resultText: { marginTop: "15px", fontSize: "20px", fontWeight: "bold", color: "green" }
+};
